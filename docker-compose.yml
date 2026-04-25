@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    environment:
+      ENABLE_AWS: 'false'
+      AWS_REGION: us-east-1
+      DYNAMODB_TABLE: CyberGuardThreats
+      S3_BUCKET: cyberguard-assets
+    ports:
+      - '8000:8000'
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    environment:
+      VITE_API_URL: http://backend:8000
+    ports:
+      - '5173:4173'
+    depends_on:
+      - backend

@@ -1,0 +1,22 @@
+[
+  {"id": 1, "platform": "WhatsApp", "sender": "Unknown Contact", "message": "Urgent: your account will be blocked unless you tap here", "label": "Threat"},
+  {"id": 2, "platform": "WhatsApp", "sender": "Priya", "message": "Can you review this photo from the trip?", "label": "Safe"},
+  {"id": 3, "platform": "WhatsApp", "sender": "Delivery Bot", "message": "Package held at depot, confirm address now", "label": "Suspicious"},
+  {"id": 4, "platform": "Instagram", "sender": "Unknown DM", "message": "Tap to see your payout update", "label": "Threat"},
+  {"id": 5, "platform": "Instagram", "sender": "Creator Hub", "message": "Brand collaboration invite for your page", "label": "Safe"},
+  {"id": 6, "platform": "Instagram", "sender": "Verified Seller", "message": "We noticed a suspicious login, confirm immediately", "label": "Threat"},
+  {"id": 7, "platform": "Email", "sender": "security@bank-alerts.com", "message": "Security alert: sign-in from a new device", "label": "Threat"},
+  {"id": 8, "platform": "Email", "sender": "billing@cloudsuite.io", "message": "Invoice attached for your review", "label": "Suspicious"},
+  {"id": 9, "platform": "Email", "sender": "hr@company-mail.com", "message": "Quarterly report and team summary enclosed", "label": "Safe"},
+  {"id": 10, "platform": "SMS", "sender": "Bank Alert", "message": "Your OTP is 482193 for login", "label": "Suspicious"},
+  {"id": 11, "platform": "SMS", "sender": "Courier Service", "message": "Package held at depot, confirm address now", "label": "Threat"},
+  {"id": 12, "platform": "SMS", "sender": "Promo Desk", "message": "Prize alert: claim your refund here", "label": "Threat"},
+  {"id": 13, "platform": "WhatsApp", "sender": "Mom", "message": "Look at the photo I just sent you", "label": "Safe"},
+  {"id": 14, "platform": "Instagram", "sender": "Influencer Team", "message": "Your reel is going viral, view analytics now", "label": "Safe"},
+  {"id": 15, "platform": "Email", "sender": "noreply@service-update.org", "message": "Password reset required: verify your identity", "label": "Threat"},
+  {"id": 16, "platform": "SMS", "sender": "Verification Code", "message": "Missed call from courier, tap to reschedule", "label": "Suspicious"},
+  {"id": 17, "platform": "WhatsApp", "sender": "Support Desk", "message": "Free gift card available, claim in 5 minutes", "label": "Threat"},
+  {"id": 18, "platform": "Instagram", "sender": "Brand Partner", "message": "We noticed suspicious login behavior", "label": "Threat"},
+  {"id": 19, "platform": "Email", "sender": "billing@cloudsuite.io", "message": "Wire transfer approval needs immediate action", "label": "Threat"},
+  {"id": 20, "platform": "SMS", "sender": "System OTP", "message": "Your login verification code has been requested", "label": "Suspicious"}
+]
