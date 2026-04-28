@@ -60,7 +60,7 @@ def threats(
 
 @app.get('/stats')
 def stats() -> dict[str, int]:
-    items = get_threats(limit=10000)
+    items = get_threats(limit=100)
     threats_count = sum(1 for item in items if str(item.get('risk_level', '')) == 'Threat')
     safe_count = sum(1 for item in items if str(item.get('risk_level', '')) == 'Safe')
     return {
