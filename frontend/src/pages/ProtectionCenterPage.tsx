@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { AppWindow, Globe2, PhoneCall, Smartphone } from 'lucide-react';
+import { ToggleSwitch } from '../components';
 import { useCyberGuard } from '../context/CyberGuardContext';
 import { protectionModules } from '../data/protectionCenter';
 import type { ProtectionModuleKey } from '../types';
@@ -37,7 +38,7 @@ export function ProtectionCenterPage() {
 
   return (
     <div className="flex flex-col gap-3 py-4">
-      <section className="rounded-[16px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">
+      <section className="rounded-[16px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">
         <div className="flex items-center justify-between gap-2">
           <p className="text-base font-semibold text-cyber-text">Protection Modules</p>
           <span className="rounded-full bg-cyber-green/12 px-3 py-2 text-xs font-medium text-cyber-green">Live</span>
@@ -47,17 +48,15 @@ export function ProtectionCenterPage() {
 
       <div className="flex flex-col gap-3">
         {modules.map(({ key, content, state, Icon }) => (
-          <motion.button
+          <motion.article
             key={key}
-            type="button"
-            onClick={() => toggleProtectionModule(key)}
             whileTap={{ scale: 0.98 }}
-            className="w-full rounded-[16px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 text-left shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
+            className="w-full rounded-[16px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 text-left shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-11 min-w-11 items-center justify-center rounded-[12px] bg-[#F3EEE7]" style={{ boxShadow: moduleAccentGlow[key] }}>
+                  <span className="inline-flex h-11 min-w-11 items-center justify-center rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))]" style={{ boxShadow: moduleAccentGlow[key] }}>
                     <Icon className={`h-5 w-5 ${moduleIconColorClass[key]}`} />
                   </span>
                   <p className="truncate text-base font-semibold text-cyber-text">{content.title}</p>
@@ -66,15 +65,17 @@ export function ProtectionCenterPage() {
               </div>
 
               <div className="flex flex-col items-end gap-2">
-                <span className={`inline-flex min-h-11 min-w-11 items-center rounded-full px-3 py-3 ${state.enabled ? 'bg-cyber-green/20' : 'bg-slate-200'}`}>
-                  <span className={`h-4 w-4 rounded-full bg-[#FAF8F5] transition ${state.enabled ? 'translate-x-4' : 'translate-x-0'}`} />
-                </span>
+                <ToggleSwitch
+                  checked={state.enabled}
+                  onChange={() => toggleProtectionModule(key)}
+                  ariaLabel={`Toggle ${content.title}`}
+                />
                 <span className={`rounded-full px-3 py-2 text-xs font-medium ${state.enabled ? 'bg-cyber-green/12 text-cyber-green' : 'bg-cyber-red/12 text-cyber-red'}`}>
                   {state.enabled ? 'ACTIVE' : 'INACTIVE'}
                 </span>
               </div>
             </div>
-          </motion.button>
+          </motion.article>
         ))}
       </div>
     </div>

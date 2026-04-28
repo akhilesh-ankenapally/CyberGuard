@@ -5,6 +5,7 @@ import { ActivityMonitorPage } from './pages/ActivityMonitorPage';
 import { AppSecurityPage } from './pages/AppSecurityPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProtectionCenterPage } from './pages/ProtectionCenterPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="protection" element={<ProtectionCenterPage />} />
             <Route path="app-security" element={<AppSecurityPage />} />
             <Route path="activity" element={<ActivityMonitorPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

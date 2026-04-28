@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useThreatSimulation } from '../hooks/useThreatSimulation';
-import type { ActivityEntry, AppAlert, ProtectionModuleKey, ProtectionModuleState, ThreatRecord } from '../types';
+import type { ActivityEntry, AppAlert, CyberGuardSettings, ProtectionModuleKey, ProtectionModuleState, ThreatRecord } from '../types';
 
 type ToastItem = {
   id: string;
@@ -14,8 +14,10 @@ type CyberGuardContextValue = ReturnType<typeof useThreatSimulation> & {
   unreadAlerts: number;
   activityFeed: ActivityEntry[];
   toasts: ToastItem[];
+  settings: CyberGuardSettings;
   protectionModules: Record<ProtectionModuleKey, ProtectionModuleState>;
   toggleProtectionModule: (module: ProtectionModuleKey) => void;
+  updateSettings: (updater: (current: CyberGuardSettings) => CyberGuardSettings) => void;
   simulatePushNotification: () => void;
   markAlertAsRead: (id: string) => void;
   pushSystemToast: (title: string, message: string, tone?: ToastItem['tone']) => void;
@@ -59,8 +61,70 @@ function createToast(record: ThreatRecord): ToastItem {
   };
 }
 
+const SETTINGS_STORAGE_KEY = 'cyberguard.settings.v1';
+
+const defaultSettings: CyberGuardSettings = {
+  appMonitoring: {
+    whatsapp: true,
+    instagram: true,
+    sms: true,
+    email: true,
+  },
+  notifications: {
+    enableAlerts: true,
+    criticalThreatAlerts: true,
+    sound: true,
+  },
+  protection: {
+    realTimeProtection: true,
+    autoScan: true,
+    scanFrequency: '30s',
+  },
+  privacy: {
+    dataCollection: true,
+    anonymousAnalytics: true,
+  },
+};
+
+function loadSettings(): CyberGuardSettings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (!raw) return defaultSettings;
+    const parsed = JSON.parse(raw) as Partial<CyberGuardSettings>;
+    return {
+      appMonitoring: { ...defaultSettings.appMonitoring, ...parsed.appMonitoring },
+      notifications: { ...defaultSettings.notifications, ...parsed.notifications },
+      protection: { ...defaultSettings.protection, ...parsed.protection },
+      privacy: { ...defaultSettings.privacy, ...parsed.privacy },
+    };
+  } catch {
+    return defaultSettings;
+  }
+}
+
+function isPlatformMonitoringEnabled(settings: CyberGuardSettings, platform: ThreatRecord['platform']) {
+  if (platform === 'WhatsApp') return settings.appMonitoring.whatsapp;
+  if (platform === 'Instagram') return settings.appMonitoring.instagram;
+  if (platform === 'SMS') return settings.appMonitoring.sms;
+  if (platform === 'Email') return settings.appMonitoring.email;
+  return true;
+}
+
+function shouldCreateAlert(settings: CyberGuardSettings, record: ThreatRecord) {
+  if (!settings.notifications.enableAlerts) return false;
+  if (record.risk_level === 'Threat' && !settings.notifications.criticalThreatAlerts) return false;
+  return record.risk_level === 'Threat' || record.risk_level === 'Suspicious';
+}
+
+function scanFrequencyMs(settings: CyberGuardSettings) {
+  if (settings.protection.scanFrequency === '15s') return 15000;
+  if (settings.protection.scanFrequency === '60s') return 60000;
+  return 30000;
+}
+
 export function CyberGuardProvider({ children }: { children: React.ReactNode }) {
   const threatState = useThreatSimulation();
+  const [settings, setSettings] = useState<CyberGuardSettings>(() => loadSettings());
   const [alerts, setAlerts] = useState<AppAlert[]>([]);
   const [activityFeed, setActivityFeed] = useState<ActivityEntry[]>([
     createEntry('Real-time protection armed', 'system'),
@@ -76,6 +140,10 @@ export function CyberGuardProvider({ children }: { children: React.ReactNode }) 
   });
   const bootstrappedIncomingRef = useRef(false);
   const lastToastAtRef = useRef(0);
+
+  useEffect(() => {
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+  }, [settings]);
 
   const addActivity = (message: string, category: ActivityEntry['category']) => {
     setActivityFeed((current) => [createEntry(message, category), ...current].slice(0, 80));
@@ -109,12 +177,20 @@ export function CyberGuardProvider({ children }: { children: React.ReactNode }) 
       return;
     }
 
+    if (!settings.protection.realTimeProtection) {
+      return;
+    }
+
     threatState.incomingThreats.forEach((record) => {
-      if (record.risk_level !== 'Safe') {
+      if (!isPlatformMonitoringEnabled(settings, record.platform)) {
+        return;
+      }
+
+      if (shouldCreateAlert(settings, record)) {
         setAlerts((current) => [createAlert(record), ...current.filter((item) => item.id !== `alert-${record.id}`)].slice(0, 40));
       }
 
-      if (record.risk_level === 'Threat') {
+      if (record.risk_level === 'Threat' && settings.notifications.enableAlerts && settings.notifications.criticalThreatAlerts) {
         pushToast(createToast(record));
       }
 
@@ -123,7 +199,7 @@ export function CyberGuardProvider({ children }: { children: React.ReactNode }) 
         addActivity(`Blocked suspicious ${record.platform} payload`, 'block');
       }
     });
-  }, [threatState.incomingThreats]);
+  }, [settings, threatState.incomingThreats]);
 
   useEffect(() => {
     if (threatState.allRecords.length === 0) return;
@@ -131,14 +207,18 @@ export function CyberGuardProvider({ children }: { children: React.ReactNode }) 
   }, [threatState.allRecords.length]);
 
   useEffect(() => {
+    if (!settings.protection.autoScan) {
+      return;
+    }
+
     const intervalId = window.setInterval(() => {
       const seedMessages = ['Scanning SMS...', 'Analyzed Instagram DM', 'Blocked suspicious URL', 'Completed auto risk sweep'];
       const message = seedMessages[Math.floor(Math.random() * seedMessages.length)];
       addActivity(message, message.includes('Blocked') ? 'block' : 'scan');
-    }, 30000);
+    }, scanFrequencyMs(settings));
 
     return () => window.clearInterval(intervalId);
-  }, []);
+  }, [settings]);
 
   const markAlertAsRead = (id: string) => {
     setAlerts((current) => current.map((item) => (item.id === id ? { ...item, read: true } : item)));
@@ -162,6 +242,11 @@ export function CyberGuardProvider({ children }: { children: React.ReactNode }) 
   };
 
   const simulatePushNotification = () => {
+    if (!settings.notifications.enableAlerts || !settings.notifications.criticalThreatAlerts) {
+      addActivity('Push notification simulation skipped by notification settings', 'system');
+      return;
+    }
+
     const alert = {
       id: `manual-${Date.now()}`,
       message: 'Critical threat simulation: notification delivery confirmed.',
@@ -186,6 +271,10 @@ export function CyberGuardProvider({ children }: { children: React.ReactNode }) 
     addActivity(message, category);
   };
 
+  const updateSettings = (updater: (current: CyberGuardSettings) => CyberGuardSettings) => {
+    setSettings((current) => updater(current));
+  };
+
   const value = useMemo<CyberGuardContextValue>(
     () => ({
       ...threatState,
@@ -193,14 +282,16 @@ export function CyberGuardProvider({ children }: { children: React.ReactNode }) 
       unreadAlerts,
       activityFeed,
       toasts,
+      settings,
       protectionModules,
       toggleProtectionModule,
+      updateSettings,
       simulatePushNotification,
       markAlertAsRead,
       pushSystemToast,
       addSystemActivity,
     }),
-    [alerts, activityFeed, protectionModules, threatState, toasts, unreadAlerts],
+    [alerts, activityFeed, protectionModules, settings, threatState, toasts, unreadAlerts],
   );
 
   return <CyberGuardContext.Provider value={value}>{children}</CyberGuardContext.Provider>;

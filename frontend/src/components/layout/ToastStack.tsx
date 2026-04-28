@@ -24,7 +24,7 @@ export function ToastStack() {
             className={`pointer-events-auto rounded-[16px] px-3 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.12)] ${toneClasses[toast.tone]}`}
           >
             <div className="flex items-start gap-2">
-              <div className="flex h-11 min-w-11 items-center justify-center rounded-[12px] bg-[#EAE6DF]">
+              <div className="flex h-11 min-w-11 items-center justify-center rounded-[12px] bg-[linear-gradient(135deg,rgba(99,102,241,0.14),rgba(139,92,246,0.1))]">
                 <BellRing className="h-4.5 w-4.5" />
               </div>
               <div className="min-w-0 flex-1">

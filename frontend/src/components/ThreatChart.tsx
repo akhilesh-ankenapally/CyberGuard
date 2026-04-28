@@ -19,7 +19,7 @@ export function ThreatChart({ points }: { points: Point[] }) {
     : '';
 
   return (
-    <div className="rounded-[24px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 shadow-[0_8px_20px_rgba(15,23,42,0.08)]">
+    <div className="rounded-[24px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-[0_8px_20px_rgba(15,23,42,0.08)]">
       <svg viewBox={`0 0 ${width} ${height}`} className="h-[260px] w-full">
         {[0, 1, 2, 3].map((line) => {
           const y = padding + ((height - padding * 2) / 3) * line;

@@ -28,12 +28,12 @@ export function MessageItem({ record, highlight = false, onAnalyzeApp }: Props) 
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
-      className={`mb-3 rounded-[24px] border bg-[#FAF8F5] p-4 transition hover:border-[#CEC4B7] hover:bg-[#F3EEE7] ${
-        highlight ? 'border-cyber-green/35 shadow-[0_10px_26px_rgba(22,163,74,0.14)]' : 'border-[#D8D1C7]'
+      className={`mb-3 rounded-[24px] border bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 transition hover:border-[rgba(99,102,241,0.25)] hover:bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] ${
+        highlight ? 'border-cyber-green/35 shadow-[0_10px_26px_rgba(22,163,74,0.14)]' : 'border-[rgba(255,255,255,0.4)]'
       }`}
     >
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D8D1C7] bg-[#F3EEE7]" style={{ boxShadow: `0 0 0 1px ${meta.accent}22` }}>
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))]" style={{ boxShadow: `0 0 0 1px ${meta.accent}22` }}>
           <Icon className="h-5 w-5" style={{ color: meta.accent }} />
         </div>
         <div className="min-w-0 flex-1">
@@ -42,7 +42,7 @@ export function MessageItem({ record, highlight = false, onAnalyzeApp }: Props) 
             <span className="rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: threat.background, color: threat.foreground }}>
               Severity: {record.risk_level}
             </span>
-            <span className="rounded-full border border-[#D8D1C7] bg-[#F3EEE7] px-2.5 py-1 text-[11px] font-semibold text-cyber-muted">
+            <span className="rounded-full border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-2.5 py-1 text-[11px] font-semibold text-cyber-muted">
               {anomaly}
             </span>
           </div>

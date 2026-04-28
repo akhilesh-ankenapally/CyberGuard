@@ -9,9 +9,9 @@ export const platformMeta: Record<Platform, { icon: typeof MessageCircle; accent
 };
 
 export const threatPalette: Record<ThreatLevel, { foreground: string; background: string; glow: string }> = {
-  Safe: { foreground: '#22C55E', background: 'rgba(34, 197, 94, 0.14)', glow: 'rgba(34, 197, 94, 0.22)' },
-  Suspicious: { foreground: '#CA8A04', background: 'rgba(250, 204, 21, 0.16)', glow: 'rgba(250, 204, 21, 0.22)' },
-  Threat: { foreground: '#EF4444', background: 'rgba(239, 68, 68, 0.14)', glow: 'rgba(239, 68, 68, 0.22)' },
+  Safe: { foreground: '#22C55E', background: 'rgba(34, 197, 94, 0.1)', glow: 'rgba(34, 197, 94, 0.2)' },
+  Suspicious: { foreground: '#FACC15', background: 'rgba(250, 204, 21, 0.1)', glow: 'rgba(250, 204, 21, 0.2)' },
+  Threat: { foreground: '#EF4444', background: 'rgba(239, 68, 68, 0.1)', glow: 'rgba(239, 68, 68, 0.2)' },
 };
 
 

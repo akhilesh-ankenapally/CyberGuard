@@ -67,4 +67,35 @@ export type AppSecurityRecord = {
   updated_at: string;
 };
 
+export type AppMonitoringSettings = {
+  whatsapp: boolean;
+  instagram: boolean;
+  sms: boolean;
+  email: boolean;
+};
+
+export type NotificationSettings = {
+  enableAlerts: boolean;
+  criticalThreatAlerts: boolean;
+  sound: boolean;
+};
+
+export type ProtectionSettings = {
+  realTimeProtection: boolean;
+  autoScan: boolean;
+  scanFrequency: '15s' | '30s' | '60s';
+};
+
+export type PrivacySettings = {
+  dataCollection: boolean;
+  anonymousAnalytics: boolean;
+};
+
+export type CyberGuardSettings = {
+  appMonitoring: AppMonitoringSettings;
+  notifications: NotificationSettings;
+  protection: ProtectionSettings;
+  privacy: PrivacySettings;
+};
+
 

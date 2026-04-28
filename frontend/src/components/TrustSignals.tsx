@@ -34,7 +34,7 @@ export function TrustSignals() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 * index }}
-            className="rounded-2xl border border-[#D8D1C7] bg-[#FAF8F5] p-3 shadow-[0_8px_18px_rgba(15,23,42,0.06)]"
+            className="rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-3 shadow-[0_8px_18px_rgba(15,23,42,0.06)]"
           >
             <div className="flex items-center justify-between text-xs text-cyber-muted">
               <span>{card.label}</span>

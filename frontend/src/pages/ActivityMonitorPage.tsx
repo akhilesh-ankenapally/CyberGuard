@@ -131,7 +131,7 @@ export function ActivityMonitorPage() {
 
   return (
     <div className="flex flex-col gap-3 py-4">
-      <section className="rounded-[16px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">
+      <section className="rounded-[16px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">
         <div className="flex items-center justify-between gap-2">
           <p className="text-base font-semibold text-cyber-text">App Permissions</p>
           <span className="rounded-full bg-cyber-blue/12 px-3 py-2 text-xs font-medium text-cyber-blue">Live 10-15s</span>
@@ -152,11 +152,11 @@ export function ActivityMonitorPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 onClick={() => setSelectedApp(app)}
-                className="w-full rounded-[16px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 text-left shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
+                className="w-full rounded-[16px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 text-left shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-start gap-2">
-                    <span className={`inline-flex h-12 min-w-12 items-center justify-center rounded-[12px] bg-[#F3EEE7] ${riskGlow(risk.level)}`}>
+                    <span className={`inline-flex h-12 min-w-12 items-center justify-center rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] ${riskGlow(risk.level)}`}>
                       <Icon className={`h-7 w-7 ${tone}`} />
                     </span>
                     <div className="min-w-0">
@@ -172,7 +172,7 @@ export function ActivityMonitorPage() {
                     const PermissionIcon = iconForPermission(permission);
                     const enabled = app.permissions.includes(permission);
                     return (
-                      <div key={`${app.id}-${permission}`} className="flex items-center justify-between rounded-[12px] bg-[#F3EEE7] px-3 py-3">
+                      <div key={`${app.id}-${permission}`} className="flex items-center justify-between rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-3 py-3">
                         <span className="inline-flex items-center gap-2">
                           <PermissionIcon className="h-4 w-4 text-cyber-muted" />
                           <span className="text-xs font-medium text-cyber-muted">{permission}</span>
@@ -199,7 +199,7 @@ export function ActivityMonitorPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 flex items-end bg-slate-900/30 backdrop-blur-sm"
+            className="fixed inset-0 z-40 flex items-end bg-indigo-200/35 backdrop-blur-sm"
             onClick={() => setSelectedApp(null)}
           >
             <motion.div
@@ -208,7 +208,7 @@ export function ActivityMonitorPage() {
               exit={{ y: 260 }}
               transition={{ type: 'spring', stiffness: 280, damping: 30 }}
               onClick={(event) => event.stopPropagation()}
-              className="w-full rounded-t-[24px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 shadow-[0_-8px_26px_rgba(15,23,42,0.14)]"
+              className="w-full rounded-t-[24px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-[0_-8px_26px_rgba(15,23,42,0.14)]"
             >
               {(() => {
                 const risk = computeRisk(selectedApp);
@@ -226,7 +226,7 @@ export function ActivityMonitorPage() {
 
                     <div className="mt-3 flex flex-col gap-2">
                       {permissionList.map((permission) => (
-                        <div key={`${selectedApp.id}-detail-${permission}`} className="flex items-center justify-between rounded-[12px] bg-[#F3EEE7] px-3 py-3">
+                        <div key={`${selectedApp.id}-detail-${permission}`} className="flex items-center justify-between rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-3 py-3">
                           <span className="text-sm font-medium text-cyber-text">{permission}</span>
                           <span className={`text-xs font-medium ${selectedApp.permissions.includes(permission) ? 'text-cyber-green' : 'text-cyber-muted'}`}>
                             {selectedApp.permissions.includes(permission) ? 'Enabled' : 'Disabled'}
@@ -237,14 +237,14 @@ export function ActivityMonitorPage() {
 
                     <div className="mt-3 flex flex-col gap-2">
                       {(['camera', 'mic', 'location'] as const).map((key) => (
-                        <div key={`${selectedApp.id}-${key}`} className="flex items-center justify-between rounded-[12px] bg-[#F3EEE7] px-3 py-3">
+                        <div key={`${selectedApp.id}-${key}`} className="flex items-center justify-between rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-3 py-3">
                           <span className="text-sm font-medium text-cyber-text">{toTitle(key)}</span>
                           <span className="text-xs font-medium text-cyber-muted">{selectedApp.usage[key]}</span>
                         </div>
                       ))}
                     </div>
 
-                    <div className="mt-3 rounded-[12px] bg-[#F3EEE7] p-3">
+                    <div className="mt-3 rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3">
                       <p className="text-xs font-medium text-cyber-muted">Suggested action</p>
                       <div className="mt-2 flex flex-col gap-2">
                         {risk.actions.map((action) => (
@@ -262,7 +262,7 @@ export function ActivityMonitorPage() {
                     <button
                       type="button"
                       onClick={() => setSelectedApp(null)}
-                      className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-[12px] bg-[#EAE6DF] px-3 py-3 text-sm font-medium text-cyber-text"
+                      className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-[12px] bg-[linear-gradient(135deg,rgba(99,102,241,0.14),rgba(139,92,246,0.1))] px-3 py-3 text-sm font-medium text-cyber-text"
                     >
                       Close
                     </button>

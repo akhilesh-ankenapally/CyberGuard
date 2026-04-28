@@ -20,12 +20,12 @@ export function ThreatCard({ record, compact = false }: Props) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
-      className={`mb-3 rounded-[24px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 ${compact ? 'p-3' : ''}`}
+      className={`mb-3 rounded-[24px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 ${compact ? 'p-3' : ''}`}
       style={{ boxShadow: `0 1px 2px rgba(15,23,42,0.06), 0 0 0 1px ${threat.glow}` }}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[#D8D1C7] bg-[#F3EEE7]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))]">
             <Icon className="h-5 w-5" style={{ color: meta.accent }} />
           </div>
           <div>
@@ -35,7 +35,7 @@ export function ThreatCard({ record, compact = false }: Props) {
               <span className="rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: threat.background, color: threat.foreground }}>
                 {record.risk_level}
               </span>
-              <span className="rounded-full border border-[#D8D1C7] bg-[#F3EEE7] px-2.5 py-1 text-[11px] font-semibold text-cyber-muted">
+              <span className="rounded-full border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-2.5 py-1 text-[11px] font-semibold text-cyber-muted">
                 {riskTag}
               </span>
             </div>
@@ -49,7 +49,7 @@ export function ThreatCard({ record, compact = false }: Props) {
         </div>
       </div>
       {!compact && (
-        <div className="mt-3 rounded-2xl border border-[#D8D1C7] bg-[#F3EEE7] px-3 py-2 text-sm text-cyber-muted">
+        <div className="mt-3 rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-3 py-2 text-sm text-cyber-muted">
           {record.message}
         </div>
       )}

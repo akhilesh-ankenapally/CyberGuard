@@ -13,7 +13,7 @@ const riskBadge = {
 } as const;
 
 const usageTone = {
-  never: 'bg-[#EAE6DF] text-cyber-muted',
+  never: 'bg-[linear-gradient(135deg,rgba(99,102,241,0.14),rgba(139,92,246,0.1))] text-cyber-muted',
   occasional: 'bg-cyber-blue/10 text-cyber-blue',
   frequent: 'bg-cyber-yellow/10 text-cyber-yellow',
   background: 'bg-cyber-red/10 text-cyber-red',
@@ -78,7 +78,7 @@ export function AppSecurityPage() {
 
   return (
     <div className="space-y-6 lg:space-y-8">
-      <header className="rounded-[28px] border border-[#D8D1C7] bg-[#FAF8F5] px-5 py-5 shadow-[0_14px_34px_rgba(15,23,42,0.1)]">
+      <header className="rounded-[28px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] px-5 py-5 shadow-[0_14px_34px_rgba(15,23,42,0.1)]">
         <div className="inline-flex items-center gap-2 rounded-full border border-cyber-blue/25 bg-cyber-blue/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-cyber-blue">
           <AppWindow className="h-3.5 w-3.5" />
           App Security
@@ -144,18 +144,18 @@ export function AppSecurityPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   onClick={() => setSelectedAppId(app.id)}
-                  className={`w-full rounded-[24px] border p-4 text-left transition ${selectedAppId === app.id ? 'border-cyber-green/25 bg-cyber-green/10' : 'border-[#D8D1C7] bg-[#FAF8F5] hover:border-[#CEC4B7]'}`}
+                  className={`w-full rounded-[24px] border p-4 text-left transition ${selectedAppId === app.id ? 'border-cyber-green/25 bg-cyber-green/10' : 'border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] hover:border-[rgba(99,102,241,0.25)]'}`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <div className="mt-0.5 flex h-11 w-11 items-center justify-center rounded-2xl border border-[#D8D1C7] bg-[#F3EEE7] text-cyber-blue">
+                      <div className="mt-0.5 flex h-11 w-11 items-center justify-center rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] text-cyber-blue">
                         {appIcons[app.name] || <AppWindow className="h-5 w-5" />}
                       </div>
                       <div>
                         <div className="text-sm font-semibold text-cyber-text">{app.name}</div>
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {app.permissions.map((permission) => (
-                            <span key={`${app.id}-${permission}`} className="rounded-full border border-[#D8D1C7] bg-[#F3EEE7] px-2 py-0.5 text-[11px] text-cyber-muted">
+                            <span key={`${app.id}-${permission}`} className="rounded-full border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-2 py-0.5 text-[11px] text-cyber-muted">
                               {permission}
                             </span>
                           ))}
@@ -167,7 +167,7 @@ export function AppSecurityPage() {
 
                   <div className="mt-4 grid gap-2 sm:grid-cols-3">
                     {(['camera', 'mic', 'location'] as const).map((key) => (
-                      <div key={`${app.id}-${key}`} className="rounded-xl border border-[#D8D1C7] bg-[#F3EEE7] px-2.5 py-2">
+                      <div key={`${app.id}-${key}`} className="rounded-xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-2.5 py-2">
                         <div className="text-[10px] uppercase tracking-[0.2em] text-cyber-muted">{titleForUsage(key)}</div>
                         <div className={`mt-1 inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${usageTone[app.usage[key]]}`}>{app.usage[key]}</div>
                       </div>
@@ -212,13 +212,13 @@ export function AppSecurityPage() {
               <p className="mt-4 text-sm leading-6 text-cyber-muted">{selectedApp.explanation}</p>
 
               <div className="mt-4 grid gap-2">
-                <div className="rounded-2xl border border-[#D8D1C7] bg-[#F3EEE7] px-3 py-2">
+                <div className="rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-3 py-2">
                   <div className="flex items-center gap-2 text-sm text-cyber-text"><Camera className="h-4 w-4 text-cyber-blue" /> Camera: <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${usageTone[selectedApp.usage.camera]}`}>{selectedApp.usage.camera}</span></div>
                 </div>
-                <div className="rounded-2xl border border-[#D8D1C7] bg-[#F3EEE7] px-3 py-2">
+                <div className="rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-3 py-2">
                   <div className="flex items-center gap-2 text-sm text-cyber-text"><Mic className="h-4 w-4 text-cyber-blue" /> Microphone: <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${usageTone[selectedApp.usage.mic]}`}>{selectedApp.usage.mic}</span></div>
                 </div>
-                <div className="rounded-2xl border border-[#D8D1C7] bg-[#F3EEE7] px-3 py-2">
+                <div className="rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] px-3 py-2">
                   <div className="flex items-center gap-2 text-sm text-cyber-text"><MapPin className="h-4 w-4 text-cyber-blue" /> Location: <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${usageTone[selectedApp.usage.location]}`}>{selectedApp.usage.location}</span></div>
                 </div>
               </div>
@@ -227,7 +227,7 @@ export function AppSecurityPage() {
                 <div className="text-xs uppercase tracking-[0.25em] text-cyber-muted">Suggested actions</div>
                 <div className="mt-3 space-y-2">
                   {selectedApp.suggested_actions.map((action) => (
-                    <div key={`${selectedApp.id}-${action}`} className="rounded-xl border border-[#D8D1C7] bg-[#FAF8F5] px-3 py-2 text-sm text-cyber-text">
+                    <div key={`${selectedApp.id}-${action}`} className="rounded-xl border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] px-3 py-2 text-sm text-cyber-text">
                       {action}
                     </div>
                   ))}

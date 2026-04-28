@@ -91,6 +91,7 @@ export function DashboardPage() {
   const displayScore = getDisplayScore(stats.threatsDetected, stats.safeMessages, stats.suspiciousMessages);
   const systemStatus = getStatusLabel(displayScore);
   const riskTone = getRiskTone(displayScore);
+  const statusTone: ThreatSummaryTone = connectionState === 'disconnected' ? 'red' : riskTone;
 
   const trendPoints = useMemo(() => buildThreatTrend(allRecords), [allRecords]);
   const hasTrendData = useMemo(() => trendPoints.some((point) => point.count > 0), [trendPoints]);
@@ -150,16 +151,16 @@ export function DashboardPage() {
   };
 
   return (
-    <div className="space-y-3 pb-4">
-      <section className="rounded-[24px] bg-[#E5E1DA] p-4 shadow-[0_16px_34px_rgba(15,23,42,0.28)] transition-all duration-200 hover:-translate-y-0.5">
+    <div className="mt-4 space-y-3 pb-4">
+      <section className="rounded-[24px] border border-[rgba(255,255,255,0.5)] bg-[linear-gradient(140deg,rgba(224,231,255,0.88),rgba(238,242,255,0.8))] p-4 shadow-[0_16px_34px_rgba(15,23,42,0.28)] transition-all duration-200 hover:-translate-y-0.5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold text-cyber-muted">System Status</p>
             <h2 className="mt-2 text-2xl font-bold leading-tight text-cyber-text">{systemStatus}</h2>
           </div>
-          <div className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold ${riskTone === 'red' ? 'bg-cyber-red/15 text-cyber-red' : riskTone === 'yellow' ? 'bg-cyber-yellow/15 text-cyber-yellow' : 'bg-cyber-green/15 text-cyber-green'}`}>
-            <span className={`relative inline-flex h-2 w-2 rounded-full ${riskTone === 'red' ? 'bg-cyber-red' : riskTone === 'yellow' ? 'bg-cyber-yellow' : 'bg-cyber-green'}`}>
-              <span className={`absolute inset-0 animate-ping rounded-full ${riskTone === 'red' ? 'bg-cyber-red/45' : riskTone === 'yellow' ? 'bg-cyber-yellow/45' : 'bg-cyber-green/45'}`} />
+          <div className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold ${statusTone === 'red' ? 'bg-cyber-red/15 text-cyber-red' : statusTone === 'yellow' ? 'bg-cyber-yellow/15 text-cyber-yellow' : 'bg-cyber-green/15 text-cyber-green'}`}>
+            <span className={`relative inline-flex h-2 w-2 rounded-full ${statusTone === 'red' ? 'bg-cyber-red' : statusTone === 'yellow' ? 'bg-cyber-yellow' : 'bg-cyber-green'}`}>
+              <span className={`absolute inset-0 animate-ping rounded-full ${statusTone === 'red' ? 'bg-cyber-red/45' : statusTone === 'yellow' ? 'bg-cyber-yellow/45' : 'bg-cyber-green/45'}`} />
             </span>
             {connectionState === 'disconnected' ? 'Offline' : 'Live'}
           </div>
@@ -176,7 +177,7 @@ export function DashboardPage() {
           <button
             type="button"
             onClick={() => navigate('/activity')}
-            className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-sm font-semibold text-cyber-text transition active:brightness-90"
+            className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#6366F1,#8B5CF6)] px-3 py-2 text-sm font-semibold text-white transition hover:brightness-95 active:brightness-90"
           >
             Permissions
             <ArrowRight className="h-4 w-4" />
@@ -184,17 +185,17 @@ export function DashboardPage() {
         </div>
       </section>
 
-      <section className="rounded-[24px] bg-[#FAF8F5] p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5">
+      <section className="rounded-[24px] border border-[rgba(255,255,255,0.5)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5">
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-cyber-muted">Threat Trend</p>
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#EAE6DF] px-3 py-1">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,rgba(99,102,241,0.14),rgba(59,130,246,0.1))] px-3 py-1">
             <span className="h-2 w-2 rounded-full bg-cyber-blue" />
             <span className="text-xs text-cyber-muted">Threat Activity</span>
           </div>
         </div>
         <p className="mt-2 text-xs text-cyber-muted">Threat count per minute across the last 6 minutes.</p>
 
-        <div className="mt-3 rounded-[16px] bg-[#F3EEE7] p-2">
+        <div className="mt-3 rounded-[16px] bg-[linear-gradient(140deg,rgba(238,242,255,0.78),rgba(255,255,255,0.7))] p-2">
           {hasTrendData ? (
             <div className="relative">
               <svg viewBox={`0 0 ${chart.width} ${chart.height}`} className="h-[170px] w-full">
@@ -279,7 +280,7 @@ export function DashboardPage() {
               </svg>
 
               {hoveredPoint !== null && chart.points[hoveredPoint] && (
-                <div className="pointer-events-none absolute right-2 top-2 rounded-[12px] border border-[#D8D1C7] bg-[#FAF8F5] px-3 py-2 shadow-[0_8px_22px_rgba(15,23,42,0.12)]">
+                <div className="pointer-events-none absolute right-2 top-2 rounded-[12px] border border-[rgba(255,255,255,0.4)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] px-3 py-2 shadow-[0_8px_22px_rgba(15,23,42,0.12)]">
                   <p className="text-xs text-cyber-muted">{chart.points[hoveredPoint].label}</p>
                   <p className="text-sm font-semibold text-cyber-text">{chart.points[hoveredPoint].count} threats</p>
                 </div>
@@ -291,13 +292,13 @@ export function DashboardPage() {
         </div>
       </section>
 
-      <section className="rounded-[24px] bg-[#FAF8F5] p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5">
+      <section className="rounded-[24px] border border-[rgba(255,255,255,0.5)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5">
         <div className="mb-3 flex items-center justify-between">
           <p className="text-sm font-semibold text-cyber-muted">Recent Alerts</p>
           <button
             type="button"
             onClick={() => setShowAllAlerts(true)}
-            className="inline-flex items-center gap-2 rounded-full bg-[#EAE6DF] px-3 py-2 text-sm font-semibold text-cyber-text transition active:brightness-95"
+            className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#6366F1,#8B5CF6)] px-3 py-2 text-sm font-semibold text-white transition hover:brightness-95 active:brightness-90"
           >
             View All Alerts
             <ArrowRight className="h-4 w-4" />
@@ -320,10 +321,10 @@ export function DashboardPage() {
                     animate={{ opacity: 1, y: 0 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => toAppSecurity(alert)}
-                    className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#F3EEE7] p-3 text-left transition-all duration-200 hover:-translate-y-0.5"
+                    className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3 text-left transition-all duration-200 hover:-translate-y-0.5"
                   >
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#EAE6DF]">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[linear-gradient(135deg,rgba(99,102,241,0.14),rgba(139,92,246,0.1))]">
                         <Icon className="h-4 w-4" style={{ color: meta.accent }} />
                       </div>
                       <div className="min-w-0">
@@ -343,7 +344,7 @@ export function DashboardPage() {
                 );
               })
             ) : (
-              <div className="rounded-[16px] bg-[#F3EEE7] p-3 text-sm text-cyber-muted">No active alerts.</div>
+              <div className="rounded-[16px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3 text-sm text-cyber-muted">No active alerts.</div>
             )}
           </AnimatePresence>
         </div>
@@ -355,7 +356,7 @@ export function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 flex items-end bg-slate-900/30 backdrop-blur-sm"
+            className="fixed inset-0 z-40 flex items-end bg-indigo-200/35 backdrop-blur-sm"
             onClick={() => setShowAllAlerts(false)}
           >
             <motion.div
@@ -364,12 +365,12 @@ export function DashboardPage() {
               exit={{ y: 260 }}
               transition={{ type: 'spring', stiffness: 280, damping: 30 }}
               onClick={(event) => event.stopPropagation()}
-              className="w-full rounded-t-[24px] border border-[#D8D1C7] bg-[#FAF8F5] p-4 shadow-[0_-8px_26px_rgba(15,23,42,0.14)]"
+              className="w-full rounded-t-[24px] border border-[rgba(255,255,255,0.5)] bg-[linear-gradient(145deg,rgba(255,255,255,0.86),rgba(224,231,255,0.75))] p-4 shadow-[0_-8px_26px_rgba(15,23,42,0.14)]"
             >
               <div className="mx-auto mb-3 h-1 w-12 rounded-full bg-slate-300" />
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-base font-semibold text-cyber-text">All Alerts</h3>
-                <span className="rounded-full bg-[#EAE6DF] px-3 py-2 text-xs text-cyber-muted">{filteredAlerts.length}</span>
+                <span className="rounded-full bg-[linear-gradient(135deg,rgba(99,102,241,0.14),rgba(59,130,246,0.1))] px-3 py-2 text-xs text-cyber-muted">{filteredAlerts.length}</span>
               </div>
 
               <div className="mt-3 max-h-[55vh] space-y-2 overflow-y-auto">
@@ -383,10 +384,10 @@ export function DashboardPage() {
                         key={`all-${alert.id}`}
                         type="button"
                         onClick={() => toAppSecurity(alert)}
-                        className="flex w-full items-center justify-between gap-3 rounded-[12px] bg-[#F3EEE7] p-3 text-left transition-all duration-200 hover:-translate-y-0.5"
+                        className="flex w-full items-center justify-between gap-3 rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3 text-left transition-all duration-200 hover:-translate-y-0.5"
                       >
                         <div className="flex min-w-0 items-center gap-2">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#EAE6DF]">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[linear-gradient(135deg,rgba(99,102,241,0.14),rgba(139,92,246,0.1))]">
                             <Icon className="h-4 w-4" style={{ color: meta.accent }} />
                           </div>
                           <div className="min-w-0">
@@ -401,14 +402,14 @@ export function DashboardPage() {
                     );
                   })
                 ) : (
-                  <div className="rounded-[12px] bg-[#F3EEE7] p-3 text-sm text-cyber-muted">No alerts yet.</div>
+                  <div className="rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3 text-sm text-cyber-muted">No alerts yet.</div>
                 )}
               </div>
 
               <button
                 type="button"
                 onClick={() => setShowAllAlerts(false)}
-                className="mt-3 inline-flex w-full items-center justify-center rounded-[16px] bg-[#EAE6DF] px-3 py-3 text-sm font-semibold text-cyber-text transition active:brightness-95"
+                className="mt-3 inline-flex w-full items-center justify-center rounded-[16px] bg-[linear-gradient(135deg,#6366F1,#8B5CF6)] px-3 py-3 text-sm font-semibold text-white transition hover:brightness-95 active:brightness-90"
               >
                 Close
               </button>
