@@ -202,3 +202,5 @@ Each emitted event includes:
 - The frontend uses backend polling for the main threat feed.
 - Simulated modules are used where real device behavior is not available in the web app.
 - The app now uses React Router with persistent sidebar navigation and cross-page state.
+
+

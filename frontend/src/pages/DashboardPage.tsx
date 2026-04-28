@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { platformMeta, threatPalette } from '../data/platforms';
 import { useCyberGuard } from '../context/CyberGuardContext';
 import { getRelativeTimeLabel } from '../lib/time';
+import { fetchStats } from '../lib/api';
 import type { AppAlert } from '../types';
 
 type ThreatSummaryTone = 'green' | 'yellow' | 'red';
@@ -87,6 +88,7 @@ export function DashboardPage() {
   const [showAllAlerts, setShowAllAlerts] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const { allRecords, alerts, stats, connectionState, monitoringState } = useCyberGuard();
+  const [apiStats, setApiStats] = useState<{ total: number; threats: number; safe: number } | null>(null);
   const latestThreat = allRecords[0] || null;
   const displayScore = getDisplayScore(stats.threatsDetected, stats.safeMessages, stats.suspiciousMessages);
   const systemStatus = getStatusLabel(displayScore);
@@ -95,6 +97,33 @@ export function DashboardPage() {
 
   const trendPoints = useMemo(() => buildThreatTrend(allRecords), [allRecords]);
   const hasTrendData = useMemo(() => trendPoints.some((point) => point.count > 0), [trendPoints]);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadStats = async () => {
+      try {
+        const next = await fetchStats();
+        if (active) {
+          setApiStats(next);
+        }
+      } catch {
+        if (active) {
+          setApiStats(null);
+        }
+      }
+    };
+
+    void loadStats();
+    const timer = window.setInterval(() => {
+      void loadStats();
+    }, 5000);
+
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
+  }, []);
 
   const chart = useMemo(() => {
     const width = 330;
@@ -293,6 +322,24 @@ export function DashboardPage() {
       </section>
 
       <section className="rounded-[24px] border border-[rgba(255,255,255,0.5)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5">
+        <p className="text-sm font-semibold text-cyber-muted">Basic Stats</p>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          <div className="rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3">
+            <p className="text-xs text-cyber-muted">Total Messages</p>
+            <p className="mt-1 text-lg font-semibold text-cyber-text">{apiStats?.total ?? stats.totalMessages}</p>
+          </div>
+          <div className="rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3">
+            <p className="text-xs text-cyber-muted">Threats</p>
+            <p className="mt-1 text-lg font-semibold text-cyber-red">{apiStats?.threats ?? stats.threatsDetected}</p>
+          </div>
+          <div className="rounded-[12px] bg-[linear-gradient(140deg,rgba(238,242,255,0.76),rgba(255,255,255,0.68))] p-3">
+            <p className="text-xs text-cyber-muted">Safe</p>
+            <p className="mt-1 text-lg font-semibold text-cyber-green">{apiStats?.safe ?? stats.safeMessages}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-[24px] border border-[rgba(255,255,255,0.5)] bg-[linear-gradient(145deg,rgba(255,255,255,0.8),rgba(224,231,255,0.72))] p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5">
         <div className="mb-3 flex items-center justify-between">
           <p className="text-sm font-semibold text-cyber-muted">Recent Alerts</p>
           <button
@@ -329,6 +376,7 @@ export function DashboardPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="line-clamp-2 break-words text-sm font-semibold text-cyber-text">{alert.message}</p>
+                            {alert.explanation && <p className="mt-1 line-clamp-2 break-words text-xs text-cyber-muted">Reason: {alert.explanation}</p>}
                         <div className="mt-2 flex items-center gap-2">
                           <span className="text-xs text-cyber-muted">{alert.platform}</span>
                           <span className="text-xs text-cyber-muted">•</span>
@@ -392,6 +440,7 @@ export function DashboardPage() {
                           </div>
                           <div className="min-w-0">
                             <p className="line-clamp-2 break-words text-sm font-semibold text-cyber-text">{alert.message}</p>
+                            {alert.explanation && <p className="mt-1 line-clamp-2 break-words text-xs text-cyber-muted">Reason: {alert.explanation}</p>}
                             <p className="mt-1 text-xs text-cyber-muted">{alert.platform} • {getRelativeTimeLabel(alert.timestamp)}</p>
                           </div>
                         </div>

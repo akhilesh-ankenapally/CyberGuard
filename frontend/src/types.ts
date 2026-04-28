@@ -31,7 +31,14 @@ export type AppAlert = {
   risk_level: ThreatLevel;
   timestamp: string;
   platform: Platform;
+  explanation?: string;
   read: boolean;
+};
+
+export type ThreatStats = {
+  total: number;
+  threats: number;
+  safe: number;
 };
 
 export type ActivityEntry = {

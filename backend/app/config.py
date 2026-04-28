@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     aws_region: str = 'us-east-1'
     dynamodb_table: str = 'CyberGuardThreats'
     s3_bucket: str = 'cyberguard-assets'
-    enable_aws: bool = False
+    enable_aws: bool = True
     dataset_path: Path = DEFAULT_DATASET_PATH
     dataset_key: str = 'datasets/cyberguard_dataset.json'
     model_key: str = 'artifacts/cyberguard-model.json'

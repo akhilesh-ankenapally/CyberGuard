@@ -48,6 +48,7 @@ function createAlert(record: ThreatRecord): AppAlert {
     risk_level: record.risk_level,
     timestamp: record.timestamp,
     platform: record.platform,
+    explanation: record.explanation,
     read: false,
   };
 }

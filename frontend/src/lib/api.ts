@@ -1,4 +1,4 @@
-import type { AnalysisResult, ThreatRecord } from '../types';
+import type { AnalysisResult, ThreatRecord, ThreatStats } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -27,6 +27,10 @@ export async function analyzeViaBackend(message: string): Promise<AnalysisResult
 
 export async function fetchThreats(): Promise<ThreatRecord[]> {
   return requestJson<ThreatRecord[]>('/threats?limit=50');
+}
+
+export async function fetchStats(): Promise<ThreatStats> {
+  return requestJson<ThreatStats>('/stats');
 }
 
 export async function sendStreamPayload(payload: { message: string; platform: string; sender: string }): Promise<AnalysisResult> {

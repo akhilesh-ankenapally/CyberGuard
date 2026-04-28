@@ -31,6 +31,17 @@ PLATFORM_MESSAGES: dict[Platform, list[str]] = {
 }
 
 
+def generate_explanation(message: str) -> str:
+    normalized = message.lower()
+    if 'free' in normalized or 'win' in normalized or 'offer' in normalized:
+        return 'Contains phishing keywords'
+    if 'http' in normalized or 'www' in normalized:
+        return 'Contains suspicious link'
+    if 'urgent' in normalized or 'call now' in normalized:
+        return 'Creates urgency (scam pattern)'
+    return 'No major threat patterns detected'
+
+
 def _build_explanation(level: ThreatLevel, message: str) -> str:
     if level == 'Threat':
         return 'Detected high-risk urgency cues, suspicious link language, or credential pressure.'

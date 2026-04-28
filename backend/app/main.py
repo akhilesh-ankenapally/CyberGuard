@@ -6,8 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
 from .models import AnalysisRequest, ThreatLevel, ThreatRecord
-from .services.analyzer import analyze_message, build_model_payload, generate_stream_message
-from .services.storage import ThreatRepository, get_recent_threats, store_threat
+from .services.analyzer import analyze_message, build_model_payload, generate_stream_message, generate_explanation
+from .services.storage import ThreatRepository
+from .aws_db import store_threat, get_threats
 
 settings = get_settings()
 repository = ThreatRepository(settings)
@@ -40,7 +41,9 @@ def analyze(payload: AnalysisRequest) -> ThreatRecord:
     # Persist the threat record to DynamoDB via boto3-backed helper.
     data = record.model_dump(mode='json')
     data['timestamp'] = record.timestamp.isoformat()
-    store_threat(data, settings=settings)
+    data['explanation'] = generate_explanation(data.get('message', ''))
+    store_threat(data)
+    record = record.model_copy(update={'explanation': data['explanation']})
 
     return record
 
@@ -51,8 +54,20 @@ def threats(
     platform: str | None = None,
     risk_level: ThreatLevel | None = None,
 ) -> list[ThreatRecord]:
-    items = get_recent_threats(limit=limit, platform=platform, risk_level=risk_level, settings=settings)
+    items = get_threats(limit=limit, platform=platform, risk_level=risk_level)
     return [ThreatRecord(**item) for item in items]
+
+
+@app.get('/stats')
+def stats() -> dict[str, int]:
+    items = get_threats(limit=10000)
+    threats_count = sum(1 for item in items if str(item.get('risk_level', '')) == 'Threat')
+    safe_count = sum(1 for item in items if str(item.get('risk_level', '')) == 'Safe')
+    return {
+        'total': len(items),
+        'threats': threats_count,
+        'safe': safe_count,
+    }
 
 
 @app.post('/stream')
@@ -80,8 +95,10 @@ def stream(data: dict) -> dict[str, int | str]:
             'source': 'backend',
         }
 
+        payload['explanation'] = generate_explanation(payload.get('message', ''))
+
         if payload['message']:
-            store_threat(payload, settings=settings)
+            store_threat(payload)
             stored += 1
 
     return {'status': 'ok', 'stored': stored}
