@@ -3,10 +3,10 @@ import { BellRing } from 'lucide-react';
 import { useCyberGuard } from '../../context/CyberGuardContext';
 
 const toneClasses = {
-  green: 'border border-cyber-green/20 bg-cyber-green/10 text-cyber-green',
-  yellow: 'border border-cyber-yellow/20 bg-cyber-yellow/10 text-cyber-yellow',
-  red: 'border border-cyber-red/20 bg-cyber-red/10 text-cyber-red',
-  blue: 'border border-cyber-blue/20 bg-cyber-blue/10 text-cyber-blue',
+  green: 'border border-cyber-green/20 bg-white/90 text-gray-900 shadow-xl',
+  yellow: 'border border-cyber-yellow/20 bg-white/90 text-gray-900 shadow-xl',
+  red: 'border border-cyber-red/20 bg-white/90 text-gray-900 shadow-xl',
+  blue: 'border border-cyber-blue/20 bg-white/90 text-gray-900 shadow-xl',
 };
 
 export function ToastStack() {
