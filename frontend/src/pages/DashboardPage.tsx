@@ -174,9 +174,7 @@ export function DashboardPage() {
   const recentAlerts = useMemo(() => filteredAlerts.slice(0, 5), [filteredAlerts]);
 
   const toAppSecurity = (alert: AppAlert) => {
-    const appName = alert.platform === 'Instagram' ? 'Instagram' : alert.platform === 'WhatsApp' ? 'WhatsApp' : '';
-    if (!appName) return;
-    navigate(`/app-security?app=${encodeURIComponent(appName)}`);
+    navigate(`/app-security?app=${encodeURIComponent(alert.platform)}`);
   };
 
   return (

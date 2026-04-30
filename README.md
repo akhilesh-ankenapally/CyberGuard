@@ -1,151 +1,78 @@
 # CyberGuard
 
-CyberGuard is a multi-page cybersecurity dashboard for live threat intelligence, protection controls, app behavior analysis, alerts, and activity monitoring.
+CyberGuard is an AI-based cybersecurity threat detection system that combines a simulated message stream, a FastAPI backend, AWS DynamoDB persistence, and a mobile-style web dashboard. It is designed to demonstrate how suspicious activity can be detected, classified, explained, stored, and surfaced in a clear operator interface.
 
-The product is built to feel like a real security system: dark premium UI, glassmorphism surfaces, animated status indicators, and continuously updating data streams.
+## 1. Project Overview
 
-## Product Overview
+CyberGuard analyzes incoming messages and behavior signals in near real time, classifies each event as Safe or Threat, and stores the result for dashboard visibility. The simulation engine acts like a live threat feed by continuously sending messages to the backend, allowing the system to behave like a real monitoring platform rather than a static demo.
 
-CyberGuard combines a live backend feed with simulated security modules to create a product-level operator experience.
+From a cybersecurity perspective, this matters because the system shows how security teams can centralize alerting, triage risky activity quickly, and attach human-readable explanations to automated detections. That combination makes threat monitoring easier to trust, review, and present.
 
-### Main Pages
+## 2. Key Features
 
-- Dashboard
-	- Live threat feed from `GET /threats`
-	- Threat summary cards
-	- Platform filters and risk filters
-	- Custom message scanning flow
-- Protection Center
-	- SMS Shield
-	- Call Shield
-	- App Shield
-	- Web Shield
-- App Security
-	- Permission Risk Analyzer
-	- App-level behavior scoring
-	- Detailed permission breakdowns and suggested actions
-- Alerts / Notifications
-	- Threat alert list with read/unread state
-	- Push notification simulation
-	- Toast notifications for new threats
-- Activity Monitor
-	- Auto Scan status
-	- Real-time protection indicator
-	- Live rolling activity log
+- Real-time threat detection using a simulation engine that sends messages to the backend
+- Risk classification with clear Safe / Threat output
+- Rule-based threat explanation system for every analyzed message
+- Dashboard with recent alerts, threat statistics, and activity tracking
+- App permissions and monitoring UI for reviewing risky app behavior
+- Settings page with controls, toggles, and notification preferences
+- Modern mobile-style responsive UI built for presentation and demo use
+- Cloud-based backend and DynamoDB integration for persistent threat records
 
-## Workflow
+## 3. System Architecture
 
-1. The backend polls or serves the current threat feed from the data store.
-2. The dashboard renders the latest feed and highlights incoming threats.
-3. When a new threat arrives, the app raises a toast, adds an alert, and logs activity.
-4. Users can move to Protection, App Security, Alerts, or Activity without reloading the app.
-5. App Security continuously recalculates risk as permission usage changes over time.
-6. Threat items can deep-link into App Security for Instagram or WhatsApp analysis.
+Frontend (Vercel)
 
-## Key Features
+↓
 
-### Dashboard
+Backend API (FastAPI on Render)
 
-- Live threat feed from the backend
-- Threat summary cards
-- Clickable risk filters: All, Threat, Suspicious, Safe
-- Platform pills for WhatsApp, Instagram, Email, and SMS
-- Confidence display with animated indicator bars
-- Message analysis panel with staged scan states
+↓
 
-### Protection Center
+Database (AWS DynamoDB)
 
-- Four shield modules with on/off state
-- Status labels for ACTIVE and INACTIVE
-- Recent scans, call logs, app permissions, and blocked URLs
-- Card-based layout for each security module
+The simulation engine sends generated threat messages to the backend API, which analyzes the message, adds an explanation, and stores the resulting record in DynamoDB. The frontend then fetches the latest data and renders it in the dashboard, activity monitor, and related monitoring views.
 
-### App Security
+## 4. Tech Stack
 
-- App Behavior Intelligence and Permission Risk Analyzer
-- Simulated app dataset with permissions and usage patterns
-- Dynamic risk scoring from permission intensity and behavior patterns
-- Risk levels: Safe, Suspicious, Threat
-- Detailed view for the selected app
-- Suggested actions such as revoking microphone access or limiting background usage
-- Automatic updates every 10-15 seconds
+Frontend:
 
-### Alerts / Notifications
-
-- Unified alert list
-- Read/unread state
-- Push notification test action
-- Toast notifications when new threats are detected
-
-### Activity Monitor
-
-- Real-time protection status
-- Auto Scan indicator
-- Continuous activity feed
-- Scanning, blocking, and notification events
-
-## UI / UX Direction
-
-- Dark premium theme with neon accents
-- Glassmorphism cards and elevated panels
-- Responsive sidebar navigation
-- Smooth Framer Motion transitions
-- Animated threat highlights and score bars
-- Clear security-status language with operator-style labels
-- Mobile-friendly layout that still reads like a desktop-grade security console
-
-## Tech Stack
-
-- React
-- Vite
+- React (Vite)
 - TypeScript
 - Tailwind CSS
-- Framer Motion
-- React Router
-- FastAPI backend
 
-## Architecture
+Backend:
 
-- `frontend/` - multi-page React security console
-- `backend/` - FastAPI threat analysis API and persistence layer
-- `dataset/` - CyberGuard datasets and processed threat samples
-- `scripts/` - preprocessing and simulation utilities
-- `docker/` - container build files
-- `aws-config/` - AWS notes and configuration guidance
+- Python (FastAPI)
 
-## Backend API
+Cloud & Infrastructure:
 
-- `POST /analyze`
-	- Accepts a message payload
-	- Runs classification logic
-	- Stores the record through the persistence helper
-	- Returns a threat record
-- `GET /threats`
-	- Returns recent threat records
-- `POST /stream`
-	- Ingests stream events into the threat store
-- `GET /health`
-	- Basic service health check
+- Render for backend hosting
+- Vercel for frontend hosting
+- AWS DynamoDB for database storage
 
-## Environment Variables
+Other:
 
-### Frontend
+- Docker for containerization
+- Git and GitHub for version control and collaboration
 
-- `VITE_API_URL=http://localhost:8000`
+## 5. How It Works
 
-### Backend
+1. The simulation engine generates messages from the dataset.
+2. The backend analyzes each message using the threat detection logic.
+3. The system assigns a risk level: Safe or Threat.
+4. A rule-based explanation is generated for the result.
+5. The record is stored in DynamoDB.
+6. The frontend fetches the latest data and displays it in the dashboard and monitoring pages.
 
-- `ENABLE_AWS=false`
-- `AWS_REGION=us-east-1`
-- `DYNAMODB_TABLE=CyberGuardThreats`
-- `S3_BUCKET=cyberguard-assets`
-
-## Local Run
+## 6. Local Setup Instructions
 
 ### Backend
 
 ```bash
 cd backend
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
@@ -158,49 +85,44 @@ npm install
 npm run dev
 ```
 
-### Docker
+### Simulation Engine
 
 ```bash
-docker compose up --build
+python scripts/simulation_engine.py --dataset dataset/kaggle_dataset.json --backend-url http://localhost:8000 --count 20
 ```
 
-- Frontend: http://localhost:5173
-- Backend: http://localhost:8000
+## 7. Deployment
 
-## Data Utilities
+The backend is deployed as a Docker container on Render. The frontend is deployed on Vercel and connects to the backend through the configured API URL. Runtime API wiring is controlled through environment variables, so the frontend can point to local, staging, or production backend endpoints without code changes.
 
-### Kaggle CSV to CyberGuard JSON
+## 8. Environment Variables
 
-```bash
-python scripts/preprocess_kaggle_sms.py --input dataset/spam.csv --output dataset/kaggle_dataset.json --seed 42
-```
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_DEFAULT_REGION
+- ENABLE_AWS
+- VITE_API_URL
 
-Output fields include:
+## 9. Demo Instructions
 
-- `platform`
-- `sender`
-- `message`
-- `label` (`spam -> Threat`, `ham -> Safe`)
+Before presenting the project:
 
-### Python Message Simulation Engine
+1. Wake the backend URL so the first request does not hit a cold start.
+2. Run the simulation engine to start sending threat events.
+3. Open the frontend link in the browser.
+4. Watch the dashboard update with new alerts, statistics, and activity entries.
 
-```bash
-python scripts/simulation_engine.py --dataset dataset/kaggle_dataset.json --min-delay 2 --max-delay 5 --count 10
-```
+## 10. Future Improvements
 
-Each emitted event includes:
+- ML-based threat detection
+- User authentication
+- Advanced analytics dashboard
+- Mobile app version
 
-- `platform`
-- `sender`
-- `message`
-- `label`
-- `timestamp`
-- `confidence`
+## Repository Notes
 
-## Current Notes
-
-- The frontend uses backend polling for the main threat feed.
-- Simulated modules are used where real device behavior is not available in the web app.
-- The app now uses React Router with persistent sidebar navigation and cross-page state.
+- Backend API routes currently include `/analyze`, `/threats`, `/stats`, `/stream`, and `/health`.
+- The simulation engine posts events to `POST /stream`.
+- The frontend uses `VITE_API_URL` and falls back to `http://localhost:8000` when it is not set.
 
 
